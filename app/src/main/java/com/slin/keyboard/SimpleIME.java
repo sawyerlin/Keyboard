@@ -6,20 +6,23 @@ import android.inputmethodservice.KeyboardView;
 import android.view.View;
 import android.view.inputmethod.InputConnection;
 
+import com.slin.keyboard.source.Source;
+
 public class SimpleIME extends InputMethodService
         implements KeyboardView.OnKeyboardActionListener {
 
     private KeyboardView kv;
     private Keyboard keyboard;
-    private boolean caps = false;
+    private String word = "";
+    private String text = "";
 
     @Override
     public View onCreateInputView() {
         kv = (KeyboardView)getLayoutInflater().inflate(R.layout.keyboard, null);
-        keyboard = new Keyboard(this, R.xml.qwerty);
+        keyboard = new Keyboard(this, R.xml.number);
         kv.setKeyboard(keyboard);
         kv.setOnKeyboardActionListener(this);
-        return null;
+        return kv;
     }
 
     @Override
@@ -35,16 +38,26 @@ public class SimpleIME extends InputMethodService
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
-        switch (primaryCode) {
-            case Keyboard.KEYCODE_DELETE:
+        switch(primaryCode) {
+            case 0:
+                if (text.length() > 0) {
+                    text = text.substring(0, text.length() - 1);
+                } else {
+                    text = "";
+                }
+                ic.deleteSurroundingText(1, 0);
                 break;
-            case Keyboard.KEYCODE_SHIFT:
-                break;
-            case Keyboard.KEYCODE_DONE:
+            case 1:
+                String currentText = Source.findValue(word);
+                text += currentText;
+                word = "";
+                ic.commitText(currentText, 1);
+                ic.finishComposingText();
                 break;
             default:
                 char code = (char)primaryCode;
-                ic.commitText(String.valueOf(code), 1);
+                word += code;
+                ic.setComposingText(word, 1);
                 break;
         }
     }
