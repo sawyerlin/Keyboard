@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">Keyboard</string>
-    <string name="simple_ime">Simple IME</string>
-    <string name="simple_ime_settings">Simple IME Settings</string>
+    <string name="app_name">BlindInputKeyboard</string>
+    <string name="simple_ime">Blind Input</string>
+    <string name="simple_ime_settings">Blind Input Settings</string>
     <string name="subtype_en_US">English (US)</string>
+    <string name="subtype_cn_CH">Chinese (CH)</string>
 </resources>

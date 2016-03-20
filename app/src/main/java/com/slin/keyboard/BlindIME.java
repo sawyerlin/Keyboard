@@ -6,17 +6,28 @@ import android.inputmethodservice.KeyboardView;
 import android.view.View;
 import android.view.inputmethod.InputConnection;
 
+import com.slin.keyboard.source.Cycle;
 import com.slin.keyboard.source.Source;
+import com.slin.keyboard.source.SourceType;
 
-public class SimpleIME extends InputMethodService
+import java.util.ArrayList;
+
+public class BlindIME extends InputMethodService
         implements KeyboardView.OnKeyboardActionListener {
 
     private KeyboardView kv;
     private Keyboard keyboard;
     private String word = "";
     private String text = "";
+    private SourceType sourceType = SourceType.Arabic;
+    private static Cycle<SourceType> sourceTypeCycle;
+    static {
+        ArrayList<SourceType> sourceTypeArrayList = new ArrayList<>();
+        sourceTypeArrayList.add(SourceType.Arabic);
+        sourceTypeArrayList.add(SourceType.Latin);
+        sourceTypeCycle = new Cycle<>(sourceTypeArrayList, SourceType.Arabic);
+    }
 
-    @Override
     public View onCreateInputView() {
         kv = (KeyboardView)getLayoutInflater().inflate(R.layout.keyboard, null);
         keyboard = new Keyboard(this, R.xml.number);
@@ -48,11 +59,14 @@ public class SimpleIME extends InputMethodService
                 ic.deleteSurroundingText(1, 0);
                 break;
             case 1:
-                String currentText = Source.findValue(word);
+                String currentText = Source.findValue(sourceType, word);
                 text += currentText;
                 word = "";
                 ic.commitText(currentText, 1);
                 ic.finishComposingText();
+                break;
+            case 2:
+                sourceType = sourceTypeCycle.peek();
                 break;
             default:
                 char code = (char)primaryCode;
