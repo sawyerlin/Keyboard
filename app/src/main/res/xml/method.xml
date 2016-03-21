@@ -2,7 +2,7 @@
 <input-method xmlns:android="http://schemas.android.com/apk/res/android">
     <subtype
         android:label="@string/subtype"
-        android:imeSubtypeLocale="en_US"
+        android:imeSubtypeLocale="cn_CH"
         android:imeSubtypeMode="keyboard" />
 </input-method>
 
