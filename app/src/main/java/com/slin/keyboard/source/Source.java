@@ -10,6 +10,15 @@ public final class Source {
         Hashtable <String, String> arabicSource = new Hashtable<>();
         source.put(SourceType.Latin, latinSource);
         source.put(SourceType.Arabic, arabicSource);
+        latinSource.put("01", "1");
+        latinSource.put("02", "2");
+        latinSource.put("03", "3");
+        latinSource.put("04", "4");
+        latinSource.put("05", "5");
+        latinSource.put("06", "6");
+        latinSource.put("07", "7");
+        latinSource.put("08", "8");
+        latinSource.put("09", "9");
         latinSource.put("1", "a");
         latinSource.put("2", "b");
         latinSource.put("3", "c");

@@ -107,8 +107,7 @@ public class BlindIME extends InputMethodService
                     word = "";
                     this.isComposing = false;
                 }  else {
-                    text += " ";
-                    ic.commitText(text, 1);
+                    ic.commitText(" ", 1);
                 }
                 break;
             default:
