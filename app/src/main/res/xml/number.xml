@@ -21,8 +21,9 @@
         <Key android:codes="48" android:keyLabel="0"/>
     </Row>
     <Row>
-        <Key android:codes="0" android:keyLabel="DEL"/>
-        <Key android:codes="1" android:keyLabel="OK"/>
-        <Key android:codes="2" android:keyLabel="LAN"/>
+        <Key android:codes="-5" android:keyLabel="DEL"/>
+        <Key android:codes="-4" android:keyLabel="OK"/>
+        <Key android:codes="-2" />
+        <Key android:codes="-3" android:keyLabel="SPACE"/>
     </Row>
 </Keyboard>

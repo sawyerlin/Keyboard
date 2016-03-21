@@ -3,6 +3,7 @@ package com.slin.keyboard;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputConnection;
 
@@ -21,6 +22,9 @@ public class BlindIME extends InputMethodService
     private String text = "";
     private SourceType sourceType = SourceType.Arabic;
     private static Cycle<SourceType> sourceTypeCycle;
+    private int shiftKeyIndex = 12;
+    private boolean isComposing = false;
+
     static {
         ArrayList<SourceType> sourceTypeArrayList = new ArrayList<>();
         sourceTypeArrayList.add(SourceType.Arabic);
@@ -31,6 +35,7 @@ public class BlindIME extends InputMethodService
     public View onCreateInputView() {
         kv = (KeyboardView)getLayoutInflater().inflate(R.layout.keyboard, null);
         keyboard = new Keyboard(this, R.xml.number);
+        keyboard.getKeys().get(shiftKeyIndex).label = sourceType.toString();
         kv.setKeyboard(keyboard);
         kv.setOnKeyboardActionListener(this);
         return kv;
@@ -46,32 +51,71 @@ public class BlindIME extends InputMethodService
 
     }
 
+
+    @Override
+    public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+        System.out.println(keyCode);
+        switch (keyCode) {
+            case Keyboard.KEYCODE_MODE_CHANGE:
+
+                break;
+            default:
+                break;
+        }
+        return super.onKeyLongPress(keyCode, event);
+    }
+
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
         switch(primaryCode) {
-            case 0:
-                if (text.length() > 0) {
-                    text = text.substring(0, text.length() - 1);
+            case Keyboard.KEYCODE_DELETE:
+                if (this.isComposing) {
+                    if (word.length() > 0) {
+                        word = word.substring(0, word.length() - 1);
+                    } else {
+                        word = "";
+                        this.isComposing = false;
+                    }
+                    ic.setComposingText(word, 1);
                 } else {
-                    text = "";
+                    if (text.length() > 0) {
+                        text = text.substring(0, text.length() - 1);
+                    } else {
+                        text = "";
+                    }
+                    ic.deleteSurroundingText(1, 0);
                 }
-                ic.deleteSurroundingText(1, 0);
                 break;
-            case 1:
+            case Keyboard.KEYCODE_DONE:
                 String currentText = Source.findValue(sourceType, word);
                 text += currentText;
                 word = "";
                 ic.commitText(currentText, 1);
                 ic.finishComposingText();
+                this.isComposing = false;
                 break;
-            case 2:
+            case Keyboard.KEYCODE_MODE_CHANGE:
                 sourceType = sourceTypeCycle.peek();
+                kv.getKeyboard().getKeys().get(shiftKeyIndex).label = sourceType.toString();
+                break;
+            case -3:
+                //TODO: refactoring method
+                if (this.isComposing) {
+                    ic.commitText(word + " ", 1);
+                    ic.finishComposingText();
+                    word = "";
+                    this.isComposing = false;
+                }  else {
+                    text += " ";
+                    ic.commitText(text, 1);
+                }
                 break;
             default:
                 char code = (char)primaryCode;
                 word += code;
                 ic.setComposingText(word, 1);
+                this.isComposing = true;
                 break;
         }
     }
