@@ -143,4 +143,6 @@ public class BlindIME extends InputMethodService
     public void swipeUp() {
 
     }
+
+    public native String getStringFromNative();
 }
