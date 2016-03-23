@@ -11,7 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
         ndk {
-            moduleName "sunpinyin"
+            moduleName "libjni_pinyinime"
             stl "stlport_static"
             cFlags "-fexceptions"
             ldLibs "log"

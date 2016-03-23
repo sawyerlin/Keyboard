@@ -1,5 +1,6 @@
 package com.slin.keyboard;
 
+import android.app.AlertDialog;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
@@ -26,6 +27,7 @@ public class BlindIME extends InputMethodService
     private boolean isComposing = false;
 
     static {
+        System.loadLibrary("sunpinyin");
         ArrayList<SourceType> sourceTypeArrayList = new ArrayList<>();
         sourceTypeArrayList.add(SourceType.Arabic);
         sourceTypeArrayList.add(SourceType.Latin);
@@ -36,6 +38,7 @@ public class BlindIME extends InputMethodService
         kv = (KeyboardView)getLayoutInflater().inflate(R.layout.keyboard, null);
         keyboard = new Keyboard(this, R.xml.number);
         keyboard.getKeys().get(shiftKeyIndex).label = sourceType.toString();
+        keyboard.getKeys().get(shiftKeyIndex + 1).label = getStringFromNative();
         kv.setKeyboard(keyboard);
         kv.setOnKeyboardActionListener(this);
         return kv;
